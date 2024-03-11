@@ -8,9 +8,11 @@ import {
   TransformControls,
   PivotControls,
   useVideoTexture,
+  useProgress,
+  Html,
 } from "@react-three/drei";
 import N64Cart from "./N64Cart";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 
 function Plane() {
   return (
@@ -63,22 +65,31 @@ const Monitor = () => {
   );
 };
 
+const Loader = () => {
+  const { active, progress, errors, item, loaded, total } = useProgress();
+  return (
+    <Html style={{ color: "white" }} center>
+      {progress} % loaded
+    </Html>
+  );
+};
+
 const App = () => {
   return (
     <Canvas>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[0, 0, 5]} intensity={1} />
-      <Environment preset="sunset" background={false} />
-      <Stars />
-      <Plane />
-      <OrbitControls makeDefault />
-      <DragControls>
-        <N64Cart position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} />
-      </DragControls>
-
-      <Desk1 position={[0, -1, 0]} />
-
-      <Monitor />
+      <Suspense fallback={<Loader />}>
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[0, 0, 5]} intensity={1} />
+        <Environment preset="sunset" background={false} />
+        <Stars />
+        <Plane />
+        <OrbitControls makeDefault />
+        <DragControls>
+          <N64Cart position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} />
+        </DragControls>
+        <Desk1 position={[0, -1, 0]} />
+        <Monitor />
+      </Suspense>
     </Canvas>
   );
 };
