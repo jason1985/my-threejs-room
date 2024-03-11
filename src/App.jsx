@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Canvas } from "@react-three/fiber";
+import { Environment, OrbitControls, Stars } from "@react-three/drei";
 
-function App() {
-  const [count, setCount] = useState(0)
+import N64Cart from "./N64Cart";
 
+function Plane() {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
+      <planeGeometry attach="geometry" args={[5, 5]} />
+      <meshStandardMaterial
+        attach="material"
+        color="grey"
+        metalness={0.8}
+        roughness={0.4}
+        side={2}
+      />
+    </mesh>
+  );
 }
 
-export default App
+const App = () => {
+  return (
+    <Canvas>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[0, 0, 5]} intensity={1} />
+      <Environment preset="sunset" background={false} />
+      <Stars />
+      <Plane />
+      <OrbitControls />
+      <N64Cart position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} />
+    </Canvas>
+  );
+};
+
+export default App;
