@@ -11,6 +11,7 @@ import {
   useProgress,
   Html,
 } from "@react-three/drei";
+import { XR, createXRStore } from "@react-three/xr";
 import N64Cart from "./N64Cart";
 import { Suspense, useRef, useState } from "react";
 
@@ -74,23 +75,30 @@ const Loader = () => {
   );
 };
 
+const store = createXRStore();
+
 const App = () => {
   return (
-    <Canvas>
-      <Suspense fallback={<Loader />}>
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[0, 0, 5]} intensity={1} />
-        <Environment preset="sunset" background={false} />
-        <Stars />
-        <Plane />
-        <OrbitControls makeDefault />
-        <DragControls>
-          <N64Cart position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} />
-        </DragControls>
-        <Desk1 position={[0, -1, 0]} />
-        <Monitor />
-      </Suspense>
-    </Canvas>
+    <>
+      <button onClick={() => store.enterAR()}>Enter AR</button>
+      <Canvas>
+        <Suspense fallback={<Loader />}>
+          <XR store={store}>
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[0, 0, 5]} intensity={1} />
+            <Environment preset="sunset" background={false} />
+            <Stars />
+            <Plane />
+            <OrbitControls makeDefault />
+            <DragControls>
+              <N64Cart position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} />
+            </DragControls>
+            <Desk1 position={[0, -1, 0]} />
+            <Monitor />
+          </XR>
+        </Suspense>
+      </Canvas>
+    </>
   );
 };
 
